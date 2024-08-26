@@ -1,0 +1,37 @@
+org: clouding
+
+service: dysls
+
+frameworkVersion: "4"
+
+package: 
+  individually: true
+  patterns: ['package.json'] 
+
+build:
+  esbuild:
+    format: esm
+    minify: true
+    bundle: true
+    external:  
+      - @aws-sdk/client-s3
+    exclude:  
+      - @aws-sdk/*
+    packages: external
+    buildConcurrency: 3
+    sourcemap:
+      type: linked
+      setNodeOptions: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  memorySize: 128
+
+functions:
+  hello:
+    handler: src/functions/hello.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
