@@ -19,9 +19,7 @@ build:
       - @aws-sdk/*
     packages: external
     buildConcurrency: 3
-    sourcemap:
-      type: linked
-      setNodeOptions: true
+    sourcemap: false
 
 provider:
   name: aws

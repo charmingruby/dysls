@@ -1,14 +1,14 @@
 import { toJSON } from '@/helpers/json'
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
 
-interface LambdaHelloResponse{
+interface LambdaHelloResponse {
   message: string
 }
 
-export async function handler(event: APIGatewayProxyEventV2) {
-  const res:LambdaHelloResponse = {
-    message: "Hello"
-  } 
+export async function handler(_event: APIGatewayProxyEventV2) {
+  const res: LambdaHelloResponse = {
+    message: 'Hello',
+  }
 
   const json = toJSON<LambdaHelloResponse>(res)
 
