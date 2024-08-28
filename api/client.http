@@ -1,0 +1,38 @@
+@baseUrl = 
+
+###
+
+# @name ping
+GET {{baseUrl}}/
+Content-Type: application/json
+
+###
+
+# @name list_notes
+GET {{baseUrl}}/notes
+Content-Type: application/json
+
+###
+
+# @name get_note
+GET {{baseUrl}}/notes/id
+Content-Type: application/json
+
+###
+
+# @name create_note
+POST {{baseUrl}}/notes
+Content-Type: application/json
+
+###
+
+# @name update_note
+PUT {{baseUrl}}/notes/id
+Content-Type: application/json
+
+###
+
+# @name delete_note
+DELETE {{baseUrl}}/notes/id
+Content-Type: application/json
+
