@@ -12,5 +12,8 @@ export async function handler(_event: APIGatewayProxyEventV2) {
 
   const json = toJSON<LambaCreateNoteResponse>(res)
 
-  return json
+  return {
+    statusCode: 201,
+    body: json,
+  }
 }
