@@ -1,4 +1,4 @@
-@baseUrl = https://jk0uw4y143.execute-api.us-east-1.amazonaws.com
+@baseUrl = 
 
 ###
 
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
     "content": "content value",
-    "tags": ["tag1"]
+    "tags": ["tag1, tag2"]
 }
 
 ###

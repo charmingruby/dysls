@@ -1,21 +1,23 @@
 import { NotesTbl } from '@/constants/tables'
 import { dynamoClient } from '@/lib/dynamo-client'
 import { Note } from '@/models/note'
-import { PutItemCommand, PutItemCommandOutput } from '@aws-sdk/client-dynamodb'
+import { PutCommand, PutCommandOutput } from '@aws-sdk/lib-dynamodb'
 
 interface NotesRepository {
-  create(note: Note): Promise<PutItemCommandOutput>
+  create(note: Note): Promise<PutCommandOutput>
 }
 
 export class DynamoNotesRepository implements NotesRepository {
-  async create(note: Note): Promise<PutItemCommandOutput> {
-    const cmd = new PutItemCommand({
+  async create(note: Note): Promise<PutCommandOutput> {
+    const { id, content, tags, createdAt } = note
+
+    const cmd = new PutCommand({
       TableName: NotesTbl,
       Item: {
-        id: { S: note.id },
-        content: { S: note.content },
-        tags: { SS: note.tags },
-        createdAt: { S: note.createdAt.toString() },
+        id,
+        content,
+        tags,
+        createdAt: createdAt.toISOString(),
       },
     })
 
