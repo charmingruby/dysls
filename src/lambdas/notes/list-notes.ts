@@ -1,19 +1,14 @@
-import { toJSON } from '@/helpers/json'
+import { Response } from '@/helpers/response'
+import { DynamoNotesRepository } from '@/repositories/dynamo/notes-repository'
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
 
-interface LambaListNotesResponse {
-  message: string
-}
-
 export async function handler(_event: APIGatewayProxyEventV2) {
-  const res: LambaListNotesResponse = {
-    message: 'list notes',
+  const notesRepository = new DynamoNotesRepository()
+
+  const op = await notesRepository.findMany()
+  if (op.$metadata.httpStatusCode !== 200) {
+    return Response.internalServerError()
   }
 
-  const json = toJSON<LambaListNotesResponse>(res)
-
-  return {
-    statusCode: 200,
-    body: json,
-  }
+  return Response.okResponse(`${op.Count} items found`, op.Items)
 }

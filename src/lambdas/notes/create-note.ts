@@ -1,8 +1,8 @@
-import { parseJSON, toJSON } from '@/helpers/json'
-import { internalServerErrorResponse } from '@/helpers/responses'
+import { parseJSON } from '@/helpers/json'
+import { Response } from '@/helpers/response'
 import { Note } from '@/models/note'
-import { HTTPNote, NotePresenter } from '@/presenters/note-presenter'
-import { DynamoNotesRepository } from '@/repository/dynamo/notes-repository'
+import { NotePresenter } from '@/presenters/note-presenter'
+import { DynamoNotesRepository } from '@/repositories/dynamo/notes-repository'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { z } from 'zod'
 
@@ -13,11 +13,6 @@ const createNoteSchema = z.object({
     .max(128, 'Max content length reached'),
   tags: z.string().array().optional(),
 })
-
-interface LambaCreateNoteResponse {
-  message: string
-  note: HTTPNote
-}
 
 export async function handler(event: APIGatewayProxyEventV2) {
   const body = parseJSON(event.body)
@@ -43,20 +38,10 @@ export async function handler(event: APIGatewayProxyEventV2) {
 
   const op = await notesRepository.create(note)
   if (op.$metadata.httpStatusCode !== 200) {
-    return internalServerErrorResponse()
+    return Response.internalServerError()
   }
 
-  const notePresenter = NotePresenter.toHTTP(note)
+  const convNote = NotePresenter.toHTTP(note)
 
-  const res: LambaCreateNoteResponse = {
-    message: 'Note created successfully.',
-    note: notePresenter,
-  }
-
-  const json = toJSON<LambaCreateNoteResponse>(res)
-
-  return {
-    statusCode: 201,
-    body: json,
-  }
+  return Response.createdResponse('note', { note: convNote })
 }

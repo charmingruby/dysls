@@ -4,16 +4,11 @@ export interface HTTPNote {
   id: string
   content: string
   tags: string[]
-  createdAt: Date
+  createdAt: string
 }
 
 export class NotePresenter {
-  static toHTTP(model: Note): HTTPNote {
-    return {
-      id: model.id,
-      content: model.content,
-      tags: model.tags,
-      createdAt: model.createdAt,
-    }
+  static toHTTP({ id, content, tags, createdAt }: Note): HTTPNote {
+    return { id, content, tags, createdAt }
   }
 }

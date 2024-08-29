@@ -1,7 +1,3 @@
-export function toJSON<T>(data: T): string {
-  return JSON.stringify(data)
-}
-
 export function parseJSON(json: string) {
   let body: unknown
 

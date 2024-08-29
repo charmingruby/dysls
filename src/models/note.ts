@@ -8,7 +8,7 @@ export interface NoteProps {
 export class Note {
   private _id: string
   private props: NoteProps
-  private _createdAt: Date
+  private _createdAt: string
 
   get id() {
     return this._id
@@ -29,6 +29,6 @@ export class Note {
   constructor(props: NoteProps) {
     this._id = v4().toString()
     this.props = props
-    this._createdAt = new Date()
+    this._createdAt = new Date().toISOString()
   }
 }
