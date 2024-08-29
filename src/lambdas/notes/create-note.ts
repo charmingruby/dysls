@@ -1,4 +1,8 @@
 import { parseJSON, toJSON } from '@/helpers/json'
+import { Note } from '@/models/note'
+import { HTTPNote, NotePresenter } from '@/presenters/note-presenter'
+import { DynamoNotesRepository } from '@/repository/dynamo/notes-repository'
+import { PutItemCommandOutput } from '@aws-sdk/client-dynamodb'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { z } from 'zod'
 
@@ -7,10 +11,13 @@ const createNoteSchema = z.object({
     .string({ required_error: 'Content is required' })
     .min(1, 'Content is required')
     .max(128, 'Max content length reached'),
+  tags: z.string().array().optional(),
 })
 
 interface LambaCreateNoteResponse {
-  content: string
+  message: string
+  note: HTTPNote
+  op: PutItemCommandOutput
 }
 
 export async function handler(event: APIGatewayProxyEventV2) {
@@ -26,8 +33,23 @@ export async function handler(event: APIGatewayProxyEventV2) {
     }
   }
 
-  const res: LambaCreateNoteResponse = {
+  const tags = !validationResult.data.tags ? [] : validationResult.data.tags
+
+  const note = new Note({
     content: validationResult.data.content,
+    tags,
+  })
+
+  const notesRepository = new DynamoNotesRepository()
+
+  const dbOutput = await notesRepository.create(note)
+
+  const notePresenter = NotePresenter.toHTTP(note)
+
+  const res: LambaCreateNoteResponse = {
+    message: 'Note created successfully.',
+    note: notePresenter,
+    op: dbOutput,
   }
 
   const json = toJSON<LambaCreateNoteResponse>(res)
