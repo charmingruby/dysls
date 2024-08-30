@@ -1,5 +1,6 @@
 @baseUrl = https://jk0uw4y143.execute-api.us-east-1.amazonaws.com
 
+
 ###
 
 # @name ping
@@ -38,6 +39,6 @@ Content-Type: application/json
 ###
 
 # @name delete_note
-DELETE {{baseUrl}}/notes/id
+DELETE {{baseUrl}}/notes/b57c2538-26cd-4e21-8d29-508fa6fab9a9
 Content-Type: application/json
 

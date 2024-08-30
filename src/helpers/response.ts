@@ -36,4 +36,13 @@ export class Response {
       }),
     }
   }
+
+  static badRequestErrorResponse(message: string) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message,
+      }),
+    }
+  }
 }

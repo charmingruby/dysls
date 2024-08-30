@@ -2,6 +2,8 @@ import { NotesTbl } from '@/constants/tables'
 import { dynamoClient } from '@/libs/dynamo-client'
 import { Note } from '@/models/note'
 import {
+  DeleteCommand,
+  DeleteCommandOutput,
   GetCommand,
   GetCommandOutput,
   PutCommand,
@@ -14,6 +16,7 @@ interface NotesRepository {
   findById(id: string): Promise<GetCommandOutput>
   findMany(): Promise<ScanCommandOutput>
   create(note: Note): Promise<PutCommandOutput>
+  delete(id: string): Promise<DeleteCommandOutput>
 }
 
 export class DynamoNotesRepository implements NotesRepository {
@@ -46,6 +49,17 @@ export class DynamoNotesRepository implements NotesRepository {
         content,
         tags,
         createdAt,
+      },
+    })
+
+    return await dynamoClient.send(cmd)
+  }
+
+  async delete(id: string): Promise<DeleteCommandOutput> {
+    const cmd = new DeleteCommand({
+      TableName: NotesTbl,
+      Key: {
+        id,
       },
     })
 
