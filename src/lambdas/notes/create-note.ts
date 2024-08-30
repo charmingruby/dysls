@@ -19,12 +19,10 @@ export async function handler(event: APIGatewayProxyEventV2) {
 
   const validationResult = createNoteSchema.safeParse(body)
   if (!validationResult.success) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: validationResult.error.issues.map((e) => e.message).join(', '),
-      }),
-    }
+    const errMsg = validationResult.error.issues
+      .map((e) => e.message)
+      .join(', ')
+    return Response.badRequestErrorResponse(errMsg)
   }
 
   const tags = !validationResult.data.tags ? [] : validationResult.data.tags

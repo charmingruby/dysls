@@ -33,8 +33,13 @@ Content-Type: application/json
 ###
 
 # @name update_note
-PUT {{baseUrl}}/notes/id
+PUT {{baseUrl}}/notes/273629b8-448f-47e4-ad81-86388f5d7b8b
 Content-Type: application/json
+
+{
+    "content": "new content value",
+    "tags": ["tag1, tag3"]
+}
 
 ###
 

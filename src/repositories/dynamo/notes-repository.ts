@@ -10,16 +10,39 @@ import {
   PutCommandOutput,
   ScanCommand,
   ScanCommandOutput,
+  UpdateCommand,
+  UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb'
 
 interface NotesRepository {
   findById(id: string): Promise<GetCommandOutput>
   findMany(): Promise<ScanCommandOutput>
   create(note: Note): Promise<PutCommandOutput>
+  update(
+    id: string,
+    body: { content: string; tags: string[] },
+  ): Promise<UpdateCommandOutput>
   delete(id: string): Promise<DeleteCommandOutput>
 }
 
 export class DynamoNotesRepository implements NotesRepository {
+  async update(
+    id: string,
+    body: { content: string; tags: string[] },
+  ): Promise<UpdateCommandOutput> {
+    const cmd = new UpdateCommand({
+      TableName: NotesTbl,
+      Key: { id },
+      UpdateExpression: 'set content = :content, tags = :tags',
+      ExpressionAttributeValues: {
+        ':content': body.content,
+        ':tags': body.tags,
+      },
+    })
+
+    return await dynamoClient.send(cmd)
+  }
+
   async findById(id: string): Promise<GetCommandOutput> {
     const cmd = new GetCommand({
       TableName: NotesTbl,
