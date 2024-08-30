@@ -1,3 +1,5 @@
+import { capitalize } from './format'
+
 export class Response {
   static internalServerError() {
     return {
@@ -7,12 +9,10 @@ export class Response {
   }
 
   static createdResponse(entity: string, body: unknown) {
-    const capitalizedEntity = entity.charAt(0).toUpperCase() + entity.slice(1)
-
     return {
       statusCode: 201,
       body: {
-        message: `${capitalizedEntity} created successfully`,
+        message: `${capitalize(entity)} created successfully`,
         data: body,
       },
     }
@@ -24,6 +24,15 @@ export class Response {
       body: JSON.stringify({
         message,
         data: body,
+      }),
+    }
+  }
+
+  static notFoundErrorResponse(entity: string) {
+    return {
+      statusCode: 404,
+      body: JSON.stringify({
+        message: `${capitalize(entity)} not found`,
       }),
     }
   }

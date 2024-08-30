@@ -15,7 +15,7 @@ Content-Type: application/json
 ###
 
 # @name get_note
-GET {{baseUrl}}/notes/id
+GET {{baseUrl}}/notes/ccb7c53a-c5bf-4184-8eec-c898ebd1aeba
 Content-Type: application/json
 
 ###
